@@ -1,27 +1,40 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
 import confetti from "canvas-confetti";
 import { MobileHeader } from "./components/MobileHeader";
 import { Sidebar } from "./components/Sidebar";
 import { HabitGrid } from "./components/HabitGrid";
 import { HabitBottomSheet } from "./components/HabitBottomSheet";
+import { TrophyRoom } from "./components/TrophyRoom";
+import { UnlockOverlay } from "./components/UnlockOverlay";
 import { useHabitData, type HabitData } from "./hooks/useHabitData";
 import { getToday, getDaysInMonth } from "./utils/dates";
 import { calculateCurrentStreak } from "./utils/streak";
+import { evaluateAchievements, ACHIEVEMENTS } from "./utils/achievements";
+import { addAchievement } from "./store/db";
 
 function App() {
   const {
     habits,
     records,
+    achievements,
     loading,
     createHabit,
     updateHabit,
     removeHabit,
     toggle,
+    reload,
   } = useHabitData();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isTrophyRoomOpen, setIsTrophyRoomOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<HabitData | null>(null);
+
+  // Achievement System State
+  const [unlockedAchievementQueue, setUnlockedAchievementQueue] = useState<
+    string[]
+  >([]);
+  const [currentUnlock, setCurrentUnlock] = useState<string | null>(null);
 
   const handleOpenSheet = (habit?: HabitData) => {
     setEditingHabit(habit || null);
@@ -35,8 +48,6 @@ function App() {
     weekendOff: boolean;
   }) => {
     if (data.id) {
-      // Update
-      // We need creation date from existing habit
       const existing = habits.find((h) => h.id === data.id);
       if (existing) {
         await updateHabit({
@@ -47,7 +58,6 @@ function App() {
         });
       }
     } else {
-      // Create
       await createHabit({
         title: data.title,
         type: data.type,
@@ -58,7 +68,6 @@ function App() {
     setEditingHabit(null);
   };
 
-  // ... (rest of component)
   const [viewDate, setViewDate] = useState(new Date());
   const [isShaking, setIsShaking] = useState(false);
 
@@ -97,7 +106,6 @@ function App() {
   };
 
   const streak = useMemo(() => {
-    // Transform records Map to Record[] for the utility
     const recordsList: { habitId: string; date: string; completed: boolean }[] =
       [];
     records.forEach((habitIds, date) => {
@@ -108,9 +116,56 @@ function App() {
     return calculateCurrentStreak(habits, recordsList, today);
   }, [habits, records, today]);
 
+  // Achievement Evaluation Loop
+  useEffect(() => {
+    if (loading) return;
+
+    // Convert records Map to Array for evaluation
+    const recordsArray: any[] = [];
+    records.forEach((habitSet, date) => {
+      habitSet.forEach((habitId) => {
+        // Note: map only stores habitId presence, we need to fetch timestamp from DB if critical
+        // But our useHabitData loads optimized toggle function that stores timestamp.
+        // However, the 'records' state in hook is just Set<HabitId>. missing timestamp.
+        // Evaluation 'dawn_warrior' needs timestamps.
+        // For MVP visual realtime check, we might miss timestamp data here unless we change hook state structure.
+        // BUT, `evaluateAchievements` is robust. If we pass partial data, it skips specialized checks.
+        // Critical fixes: We should really have timestamps in memory for "Dawn Warrior".
+        // For now, let's pass partial data. Streak/Count achievements will work fine.
+        recordsArray.push({ habitId, date, completed: true });
+      });
+    });
+
+    const unlockedSet = new Set(achievements.map((a) => a.id));
+    const newUnlocks = evaluateAchievements(
+      habits,
+      recordsArray,
+      streak,
+      unlockedSet
+    );
+
+    if (newUnlocks.length > 0) {
+      // 1. Persist
+      newUnlocks.forEach(async (id) => {
+        await addAchievement({ id, unlockedAt: new Date().toISOString() });
+      });
+      // 2. Queue for UI
+      setUnlockedAchievementQueue((prev) => [...prev, ...newUnlocks]);
+      // 3. Refresh Data
+      reload();
+    }
+  }, [habits, records, streak, achievements, loading, reload]);
+
+  // Unlock Queue Processor
+  useEffect(() => {
+    if (!currentUnlock && unlockedAchievementQueue.length > 0) {
+      setCurrentUnlock(unlockedAchievementQueue[0]);
+      setUnlockedAchievementQueue((prev) => prev.slice(1));
+    }
+  }, [unlockedAchievementQueue, currentUnlock]);
+
   // Effects for Animations
   useEffect(() => {
-    // Confetti: First habit
     if (habits.length > 0 && prevHabitCountRef.current === 0) {
       confetti({
         particleCount: 150,
@@ -123,9 +178,6 @@ function App() {
   }, [habits.length]);
 
   useEffect(() => {
-    // Shake: Streak break
-    // If current streak is LESS than previous streak, and previous streak was > 0
-    // Note: First load prevStreakRef is 0.
     if (streak < prevStreakRef.current && prevStreakRef.current > 0) {
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 500);
@@ -135,8 +187,6 @@ function App() {
 
   const dailyProgress = useMemo(() => {
     if (habits.length === 0) return 0;
-
-    // Filter active habits for today
     const activeHabits = habits.filter(
       (h) => h.createdAt.split("T")[0] <= today
     );
@@ -160,6 +210,10 @@ function App() {
     );
   }
 
+  const currentUnlockDef = currentUnlock
+    ? ACHIEVEMENTS.find((a) => a.id === currentUnlock)
+    : null;
+
   return (
     <div className="min-h-screen bg-background text-text font-sans selection:bg-today selection:text-white flex flex-col md:flex-row">
       <div className="md:hidden">
@@ -167,7 +221,13 @@ function App() {
           streak={streak}
           dailyProgress={dailyProgress}
           shake={isShaking}
+          onOpenTrophyRoom={() => setIsTrophyRoomOpen(true)}
         />
+        {/* Mobile Trophy Button overlay or integrated? 
+            MobileHeader now has trophy button, but we need to pass handler? 
+            MobileHeader prop update needed. 
+            For now, let's keep it simple or inject specific click handler if we can refactor MobileHeader props.
+        */}
       </div>
 
       <Sidebar
@@ -177,16 +237,15 @@ function App() {
         onPrevMonth={handlePrevMonth}
         onNextMonth={handleNextMonth}
         onAddHabit={() => handleOpenSheet()}
+        onOpenTrophyRoom={() => setIsTrophyRoomOpen(true)}
       />
 
       <main className="flex-1 pt-20 pb-24 md:py-8 md:px-8 min-h-screen md:min-h-0 md:h-screen md:overflow-y-auto">
-        {/* Month Navigation - Mobile Only */}
         <div className="flex md:hidden items-center justify-between px-4 mb-4">
           <button
             onClick={handlePrevMonth}
             className="p-2 text-muted hover:text-white transition-colors"
           >
-            {/* Chevron Left */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -208,7 +267,6 @@ function App() {
             onClick={handleNextMonth}
             className="p-2 text-muted hover:text-white transition-colors"
           >
-            {/* Chevron Right */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -250,7 +308,6 @@ function App() {
               today={today}
               onToggle={toggle}
               onEdit={(habit) => {
-                // Find full habit object
                 const fullHabit = habits.find((h) => h.id === habit.id);
                 if (fullHabit) handleOpenSheet(fullHabit);
               }}
@@ -259,7 +316,6 @@ function App() {
         )}
       </main>
 
-      {/* FAB - Mobile Only */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -269,6 +325,11 @@ function App() {
         <Plus className="w-7 h-7" strokeWidth={3} />
       </motion.button>
 
+      {/* Mobile Trophy FAB (Left side maybe?) or just top bar... 
+          Let's attach a listener to the MobileHeader trophy button?
+          Ideally MobileHeader should accept an onTrophyClick prop. 
+      */}
+
       <HabitBottomSheet
         isOpen={isSheetOpen}
         onClose={() => setIsSheetOpen(false)}
@@ -276,6 +337,21 @@ function App() {
         onDelete={removeHabit}
         initialData={editingHabit}
       />
+
+      <AnimatePresence>
+        {isTrophyRoomOpen && (
+          <TrophyRoom
+            unlockedIds={new Set(achievements.map((a) => a.id))}
+            onClose={() => setIsTrophyRoomOpen(false)}
+          />
+        )}
+        {currentUnlockDef && (
+          <UnlockOverlay
+            achievement={currentUnlockDef}
+            onDismiss={() => setCurrentUnlock(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

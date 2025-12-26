@@ -10,6 +10,7 @@ interface SidebarProps {
   onPrevMonth: () => void;
   onNextMonth: () => void;
   onAddHabit: () => void;
+  onOpenTrophyRoom: () => void;
   className?: string;
 }
 
@@ -20,6 +21,7 @@ export const Sidebar = ({
   onPrevMonth,
   onNextMonth,
   onAddHabit,
+  onOpenTrophyRoom,
   className,
 }: SidebarProps) => {
   return (
@@ -77,6 +79,14 @@ export const Sidebar = ({
         <h3 className="text-xs font-bold text-muted uppercase tracking-wider">
           Navigation
         </h3>
+        <button
+          onClick={onOpenTrophyRoom}
+          className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-elevated transition-colors text-text group"
+        >
+          <Trophy className="w-5 h-5 text-yellow-500 group-hover:scale-110 transition-transform" />
+          <span className="font-medium">Trophy Room</span>
+        </button>
+
         <div className="flex items-center justify-between bg-elevated rounded-lg p-2 border border-border/30">
           <button
             onClick={onPrevMonth}
