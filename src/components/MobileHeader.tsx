@@ -1,4 +1,3 @@
-import { motion, AnimatePresence } from "framer-motion";
 import * as LucideIcons from "lucide-react";
 import { StreakPulse } from "./StreakPulse";
 import { ProgressRing } from "./ProgressRing";
