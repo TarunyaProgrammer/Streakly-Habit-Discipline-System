@@ -1,11 +1,5 @@
-import {
-  differenceInDays,
-  getDay,
-  isAfter,
-  isBefore,
-  parseISO,
-  subDays,
-} from "date-fns";
+```typescript
+import { differenceInDays, parseISO, subDays } from "date-fns";
 import { Habit } from "../store/db";
 
 export type Tier = "bronze" | "silver" | "gold" | "legendary";

@@ -1,6 +1,6 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 
-interface Habit {
+export interface Habit {
   id: string;
   title: string;
   type: "mandatory" | "optional";
@@ -8,19 +8,19 @@ interface Habit {
   createdAt: string; // ISODate
 }
 
-interface Achievement {
+export interface Achievement {
   id: string; // e.g. "streak_7"
   unlockedAt: string; // ISODate
 }
 
-interface Record {
+export interface Record {
   habitId: string;
   date: string; // YYYY-MM-DD
   completed: boolean;
   timestamp?: string; // ISODate for time-of-day achievements
 }
 
-interface Meta {
+export interface Meta {
   key: string;
   value: any;
 }
@@ -53,7 +53,7 @@ let dbPromise: Promise<IDBPDatabase<StreaklyDB>>;
 export const getDB = () => {
   if (!dbPromise) {
     dbPromise = openDB<StreaklyDB>(DB_NAME, DB_VERSION, {
-      upgrade(db, oldVersion, newVersion, transaction) {
+      upgrade(db) {
         if (!db.objectStoreNames.contains("habits")) {
           db.createObjectStore("habits", { keyPath: "id" });
         }
