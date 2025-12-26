@@ -1,5 +1,5 @@
 import { differenceInDays, parseISO, subDays } from "date-fns";
-import { Habit } from "../store/db";
+import type { Habit } from "../store/db";
 
 export type Tier = "bronze" | "silver" | "gold" | "legendary";
 
