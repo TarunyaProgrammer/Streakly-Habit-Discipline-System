@@ -36,7 +36,7 @@ export const HabitGrid = ({
         }}
       >
         {/* Header Row: Dates */}
-        <div className="sticky left-0 z-20 bg-background/95 backdrop-blur font-bold text-muted text-sm flex items-center p-2">
+        <div className="sticky left-0 z-20 bg-background/60 backdrop-blur-md font-bold text-muted text-sm flex items-center p-2 border-b border-border/30">
           Habit
         </div>
         {days.map((day) => {
@@ -45,8 +45,8 @@ export const HabitGrid = ({
             <div
               key={day}
               className={cn(
-                "flex flex-col items-center justify-center p-1 text-xs text-muted font-mono transition-colors",
-                isToday && "text-today font-bold"
+                "flex flex-col items-center justify-center p-1 text-xs font-mono transition-colors border-b border-border/30",
+                isToday ? "text-today font-bold bg-today/5" : "text-muted"
               )}
             >
               <span>{day.split("-")[2]}</span>
@@ -58,7 +58,7 @@ export const HabitGrid = ({
         {habits.map((habit) => (
           <div key={habit.id} className="contents group">
             {/* Habit Name (Sticky Left) */}
-            <div className="sticky left-0 z-10 bg-background/95 backdrop-blur border-r border-border/50 flex items-center p-2 truncate">
+            <div className="sticky left-0 z-10 bg-background/60 backdrop-blur-md border-r border-border/30 flex items-center p-2 truncate">
               <button
                 onClick={() => onEdit(habit)}
                 className="text-sm font-medium text-text group-hover:text-white transition-colors hover:underline text-left"
@@ -87,7 +87,10 @@ export const HabitGrid = ({
               return (
                 <div
                   key={`${habit.id}-${day}`}
-                  className="flex items-center justify-center"
+                  className={cn(
+                    "flex items-center justify-center transition-colors",
+                    isToday && "bg-today/5"
+                  )}
                 >
                   <HabitCell
                     date={day}

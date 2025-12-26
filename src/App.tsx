@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import confetti from "canvas-confetti";
 import { MobileHeader } from "./components/MobileHeader";
+import { Sidebar } from "./components/Sidebar";
 import { HabitGrid } from "./components/HabitGrid";
 import { HabitBottomSheet } from "./components/HabitBottomSheet";
 import { useHabitData, type HabitData } from "./hooks/useHabitData";
@@ -160,16 +161,28 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-text font-sans selection:bg-today selection:text-white">
-      <MobileHeader
+  return (
+    <div className="min-h-screen bg-background text-text font-sans selection:bg-today selection:text-white flex flex-col md:flex-row">
+      <div className="md:hidden">
+        <MobileHeader
+          streak={streak}
+          dailyProgress={dailyProgress}
+          shake={isShaking}
+        />
+      </div>
+
+      <Sidebar 
         streak={streak}
         dailyProgress={dailyProgress}
-        shake={isShaking}
+        viewMonthLabel={viewMonthLabel}
+        onPrevMonth={handlePrevMonth}
+        onNextMonth={handleNextMonth}
+        onAddHabit={() => handleOpenSheet()}
       />
 
-      <main className="pt-20 pb-24 min-h-screen">
-        {/* Month Navigation */}
-        <div className="flex items-center justify-between px-4 mb-4">
+      <main className="flex-1 pt-20 pb-24 md:py-8 md:px-8 min-h-screen md:min-h-0 md:h-screen md:overflow-y-auto">
+        {/* Month Navigation - Mobile Only */}
+        <div className="flex md:hidden items-center justify-between px-4 mb-4">
           <button
             onClick={handlePrevMonth}
             className="p-2 text-muted hover:text-white transition-colors"
@@ -214,7 +227,7 @@ function App() {
         </div>
 
         {habits.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-[60vh] text-center px-6">
+          <div className="flex flex-col items-center justify-center h-[60vh] md:h-full text-center px-6">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -230,27 +243,29 @@ function App() {
             </button>
           </div>
         ) : (
-          <HabitGrid
-            days={days}
-            habits={habits}
-            records={records}
-            today={today}
-            onToggle={toggle}
-            onEdit={(habit) => {
-              // Find full habit object
-              const fullHabit = habits.find((h) => h.id === habit.id);
-              if (fullHabit) handleOpenSheet(fullHabit);
-            }}
-          />
+          <div className="md:max-w-full">
+            <HabitGrid
+              days={days}
+              habits={habits}
+              records={records}
+              today={today}
+              onToggle={toggle}
+              onEdit={(habit) => {
+                // Find full habit object
+                const fullHabit = habits.find((h) => h.id === habit.id);
+                if (fullHabit) handleOpenSheet(fullHabit);
+              }}
+            />
+          </div>
         )}
       </main>
 
-      {/* FAB */}
+      {/* FAB - Mobile Only */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => handleOpenSheet()}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-today text-white rounded-full shadow-lg shadow-blue-500/20 flex items-center justify-center z-40 transition-shadow hover:shadow-blue-500/40"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-today text-white rounded-full shadow-lg shadow-blue-500/20 flex md:hidden items-center justify-center z-40 transition-shadow hover:shadow-blue-500/40"
       >
         <Plus className="w-7 h-7" strokeWidth={3} />
       </motion.button>

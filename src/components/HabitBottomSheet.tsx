@@ -96,7 +96,7 @@ export const HabitBottomSheet = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[55]"
           />
 
           <motion.div
@@ -104,7 +104,7 @@ export const HabitBottomSheet = ({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 bg-surface border-t border-border rounded-t-xl z-50 p-6 shadow-2xl safe-area-bottom"
+            className="fixed bottom-0 left-0 right-0 bg-surface border-t border-border rounded-t-xl z-[60] p-6 shadow-2xl safe-area-bottom w-full md:max-w-2xl md:left-1/2 md:-translate-x-1/2 md:rounded-xl md:bottom-6 md:border"
           >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-text">

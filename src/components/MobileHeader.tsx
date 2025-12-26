@@ -7,13 +7,14 @@ interface MobileHeaderProps {
   shake?: boolean;
 }
 
+// Note: Fixed for standard mobile view
 export const MobileHeader = ({
   streak,
   dailyProgress,
   shake,
 }: MobileHeaderProps) => {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 h-16 px-4 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 h-16 px-4 flex items-center justify-between w-full">
       <div className="flex flex-col">
         <span className="text-xs text-muted font-medium uppercase tracking-wider">
           Streakly
