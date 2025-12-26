@@ -1,4 +1,3 @@
-```typescript
 import { differenceInDays, parseISO, subDays } from "date-fns";
 import { Habit } from "../store/db";
 
