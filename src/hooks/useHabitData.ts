@@ -5,6 +5,7 @@ import {
   addHabit,
   deleteHabit,
   toggleRecord,
+  getAchievements,
 } from "../store/db";
 
 export interface HabitData {
@@ -15,28 +16,28 @@ export interface HabitData {
   createdAt: string;
 }
 
+export interface AchievementData {
+  id: string;
+  unlockedAt: string;
+}
+
 export const useHabitData = () => {
   const [habits, setHabits] = useState<HabitData[]>([]);
   const [records, setRecords] = useState<Map<string, Set<string>>>(new Map());
+  const [achievements, setAchievements] = useState<AchievementData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const loadData = useCallback(async () => {
     try {
-      const allHabits = await getHabits();
+      const [allHabits, allAchievements] = await Promise.all([
+        getHabits(),
+        getAchievements(),
+      ]);
       setHabits(allHabits);
+      setAchievements(allAchievements);
 
       // Load records
       const recordsMap = new Map<string, Set<string>>();
-
-      // To optimize, we could load only current month, but for now load all (MVP)
-      // Or better: iterate habits and load records?
-      // "getRecordsByHabit"
-
-      // Actually, we need records to calculate streaks and render grid.
-      // Let's load ALL records for now (IndexedDB is fast enough for list of simple objects).
-      // We don't have a "getAllRecords" in db.ts repo yet.
-      // Let's add it or iterate habits.
-      // Iterating habits logic:
 
       const promises = allHabits.map((h) => getRecordsByHabit(h.id));
       const results = await Promise.all(promises);
@@ -75,8 +76,6 @@ export const useHabitData = () => {
   };
 
   const updateHabit = async (habit: HabitData) => {
-    // We don't have updateHabit in db.ts yet?
-    // db.ts has `put` so addHabit works for update if key exists.
     await addHabit(habit);
     await loadData();
   };
@@ -102,17 +101,23 @@ export const useHabitData = () => {
       return next;
     });
 
-    await toggleRecord(habitId, date, newCompleted);
-    // We can reload or trust optimistic. Let's just trust optimistic for now to be fast.
+    // Add timestamp for time-of-day tracking
+    const timestamp = new Date().toISOString();
+    await toggleRecord(habitId, date, newCompleted, timestamp);
+    // We intentionally don't reload here unless we want to check for achievements immediately
+    // Ideally, we check achievements here!
+    // But let's verify data flow first. User logic step is next.
   };
 
   return {
     habits,
     records,
+    achievements,
     loading,
     createHabit,
     updateHabit,
     removeHabit,
     toggle,
+    reload: loadData, // Expose for manual refresh if needed
   };
 };
