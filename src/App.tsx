@@ -161,7 +161,6 @@ function App() {
   }
 
   return (
-  return (
     <div className="min-h-screen bg-background text-text font-sans selection:bg-today selection:text-white flex flex-col md:flex-row">
       <div className="md:hidden">
         <MobileHeader
@@ -171,7 +170,7 @@ function App() {
         />
       </div>
 
-      <Sidebar 
+      <Sidebar
         streak={streak}
         dailyProgress={dailyProgress}
         viewMonthLabel={viewMonthLabel}
