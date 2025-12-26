@@ -1,89 +1,55 @@
-# Streakly · ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+# Streakly | Discipline Mirror
 
-> **A discipline mirror that records every promise you keep — and every one you break.**
+![Streakly Banner](https://github.com/user-attachments/assets/placeholder)
 
-streakly.app (Coming Soon)
+> **"Identity is a repeatable process."**
 
-## ⚡ What is Streakly?
+Streakly is a high-performance, mobile-first habit discipline system built with unique "Void" aesthetics. It focuses on strict streak maintenance and achievement unlocking to gamify personal growth.
 
-Streakly is not a checklist. It is a **Discipline System** designed for those who demand accountability. Built with a "Void Discipline" aesthetic, it offers a distraction-free, high-contrast interface to track your mandatory and optional protocols.
+## 🚀 Features
 
-Unlike forgiving habit trackers, Streakly is **strict**:
+- **Void User Interface**: Premium dark mode with glassmorphism and neon accents.
+- **Strict Logic**: Miss a mandatory habit? Your streak resets. No excuses.
+- **Achievement System**: Unlock 20+ badges (Bronze, Silver, Gold, Legendary) for consistency, dedication, and mastery.
+- **Trophy Room**: Visual gallery of your earned discipline artifacts.
+- **Offline First**: All data lives on your device (IndexedDB). Zero latency.
+- **Responsive**: Optimized for mobile, but creates a rich dashboard experience on desktop.
 
-- **Miss a mandatory habit?** Your streak resets. No excuses.
-- **Timezone Aware**: Late night grinder? We handle it.
-- **Offline First**: Your discipline data lives on your device (IndexedDB). No cloud required.
-
-## 🖤 The Void Theme
-
-Designed to be stared at in the dark at 2 AM.
-
-- **Background**: `#0B0E14` (Void)
-- **Accents**: `#3B82F6` (Electric Blue) & `#22C55E` (Success)
-- **Feedback**: Neon pulses for high streaks, angry shakes for failures.
-
-## 🛠️ Tech Stack
-
-Built for speed, performance, and pure client-side persistence.
+## 🛠️ Stack
 
 - **Framework**: React 19 + Vite
-- **Styling**: Tailwind CSS v4 + Framer Motion
+- **Styling**: TailwindCSS v4 + Framer Motion
+- **Database**: IndexedDB (local storage)
 - **Icons**: Lucide React
-- **Persistence**: IndexedDB (via `idb`)
-- **Effects**: Canvas Confetti
 
-## 🚀 Getting Started
+## ⚡ Deployment
 
-Clone the repository and initiate the protocol.
+### Deploy to Vercel
+
+This project is optimized for deployment on Vercel.
+
+1.  Push this code to your GitHub repository.
+2.  Log in to [Vercel](https://vercel.com).
+3.  Click **"Add New..."** -> **"Project"**.
+4.  Import your `Streakly` repository.
+5.  Vercel will auto-detect Vite. The default settings (`npm run build`) are correct.
+6.  Click **Deploy**.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FTarunyaProgrammer%2FStreakly-Habit-Discipline-System)
+
+## 📦 Local Development
 
 ```bash
-# 1. Clone
-git clone https://github.com/TarunyaProgrammer/Streakly-Habit-Discipline-System.git
-
-# 2. Enter the Void
-cd Streakly-Habit-Discipline-System
-
-# 3. Install
+# Install dependencies
 npm install
 
-# 4. Run
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
 ```
 
-## 🧩 Key Features
+## 📄 License
 
-### 1. The Grid
-
-A visual matrix of your consistency. Rows are habits, columns are days.
-
-- **Grey**: Future (Locked)
-- **Blue**: Today (Active)
-- **Green**: Done
-- **Red**: Missed (Implied by broken streak)
-
-### 2. Strict Streak Logic
-
-Calculated live.
-
-- **Mandatory**: Must be done daily (unless weekend off). Missing one resets the counter.
-- **Optional**: Adds to completion % but doesn't break the main streak.
-
-### 3. Visual Feedback
-
-- **Spark**: Click a cell for a satisfying toggle.
-- **Pulse**: Maintain a 7+ day streak to see your flame pulse with neon energy.
-- **Shake**: Break a streak, and watch the UI reject your failure.
-
-## 🤝 Contributing
-
-Discipline is shared.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'feat: Add AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-**[TarunyaProgrammer](https://github.com/TarunyaProgrammer)**
+MIT © [TarunyaProgrammer](https://github.com/TarunyaProgrammer)
