@@ -1,73 +1,89 @@
-# React + TypeScript + Vite
+# Streakly · ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **A discipline mirror that records every promise you keep — and every one you break.**
 
-Currently, two official plugins are available:
+streakly.app (Coming Soon)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ⚡ What is Streakly?
 
-## React Compiler
+Streakly is not a checklist. It is a **Discipline System** designed for those who demand accountability. Built with a "Void Discipline" aesthetic, it offers a distraction-free, high-contrast interface to track your mandatory and optional protocols.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Unlike forgiving habit trackers, Streakly is **strict**:
 
-## Expanding the ESLint configuration
+- **Miss a mandatory habit?** Your streak resets. No excuses.
+- **Timezone Aware**: Late night grinder? We handle it.
+- **Offline First**: Your discipline data lives on your device (IndexedDB). No cloud required.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🖤 The Void Theme
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Designed to be stared at in the dark at 2 AM.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Background**: `#0B0E14` (Void)
+- **Accents**: `#3B82F6` (Electric Blue) & `#22C55E` (Success)
+- **Feedback**: Neon pulses for high streaks, angry shakes for failures.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🛠️ Tech Stack
+
+Built for speed, performance, and pure client-side persistence.
+
+- **Framework**: React 19 + Vite
+- **Styling**: Tailwind CSS v4 + Framer Motion
+- **Icons**: Lucide React
+- **Persistence**: IndexedDB (via `idb`)
+- **Effects**: Canvas Confetti
+
+## 🚀 Getting Started
+
+Clone the repository and initiate the protocol.
+
+```bash
+# 1. Clone
+git clone https://github.com/TarunyaProgrammer/Streakly-Habit-Discipline-System.git
+
+# 2. Enter the Void
+cd Streakly-Habit-Discipline-System
+
+# 3. Install
+npm install
+
+# 4. Run
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧩 Key Features
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1. The Grid
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+A visual matrix of your consistency. Rows are habits, columns are days.
+
+- **Grey**: Future (Locked)
+- **Blue**: Today (Active)
+- **Green**: Done
+- **Red**: Missed (Implied by broken streak)
+
+### 2. Strict Streak Logic
+
+Calculated live.
+
+- **Mandatory**: Must be done daily (unless weekend off). Missing one resets the counter.
+- **Optional**: Adds to completion % but doesn't break the main streak.
+
+### 3. Visual Feedback
+
+- **Spark**: Click a cell for a satisfying toggle.
+- **Pulse**: Maintain a 7+ day streak to see your flame pulse with neon energy.
+- **Shake**: Break a streak, and watch the UI reject your failure.
+
+## 🤝 Contributing
+
+Discipline is shared.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'feat: Add AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+**[TarunyaProgrammer](https://github.com/TarunyaProgrammer)**
